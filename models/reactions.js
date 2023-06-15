@@ -1,27 +1,27 @@
-const mongoose = require('mongoose');
+
+const { Schema, Types } = require('mongoose');
 const moment = require('moment')
 
-const ReactionSchema = new mongoose.Schema(
-	{
-		reactionId: {
-			type: mongoose.Schema.Types.ObjectId,
-			default: () => new mongoose.Types.ObjectId()
-		},
-		reactionBody: {
-			type: String,
-			required: true,
-			maxlength: 280
-		},
-		username: {
-			type: String,
-			required: true
-		},
-		createdAt: {
-			type: Date,
-			default: Date.now,
-			get: (timestamp) => moment(timestamp).format('MMMM Do YYYY, h:mm:ss a')
-		}
+const ReactionSchema = new Schema({
+	reactionId: {
+		type: Types.ObjectId,
+		default: () => new Types.ObjectId()
 	},
+	reactionBody: {
+		type: String,
+		required: true,
+		maxlength: 280
+	},
+	username: {
+		type: String,
+		required: true
+	},
+	createdAt: {
+		type: Date,
+		default: Date.now,
+		get: (timestamp) => moment(timestamp).format('MMMM Do YYYY, h:mm:ss a')
+	}
+},
 	{
 		toJSON: {
 			getters: true
@@ -31,8 +31,11 @@ const ReactionSchema = new mongoose.Schema(
 	}
 );
 
+const Reaction = model('Reaction', ReactionSchema);
 
+module.exports = Reaction;
 
 /*------------------------------------------------------------------------------------------------*/
 
-// the use of _id: false in the ReactionSchema. This option prevents MongoDB from creating an automatic _id for each subdocument in reactions.
+// the use of _id: false in the ReactionSchema, is to prevents MongoDB from
+//creating an automatic _id for each subdocument in reactions.

@@ -1,6 +1,7 @@
-const { Schema, model, get } = require('mongoose');
+/* eslint-disable no-undef */
+const { Schema, model } = require('mongoose')
 
-const ReactionSchema = require('./Reaction');
+const ReactionSchema = require('./Reaction')
 const moment = require('moment')
 
 const ThoughtSchema = new Schema({
@@ -28,8 +29,16 @@ const ThoughtSchema = new Schema({
 		},
 		id: false
 	}
-);
+)
 
-const Thought = model('Though', ThoughtSchema);
+// Virtual for thought's URL
+ThoughtSchema.virtual('reactionCount').get(function () {
+	return this.reactions.length;
+})
+// this can not be an arrow function because arrow functions do not bind their 
+// own this context, which we need to refer to the document instance.
 
-module.exports = Thought;
+
+const Thought = model('Though', ThoughtSchema)
+
+module.exports = Thought
