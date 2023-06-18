@@ -1,0 +1,1 @@
+const { User, Friend } = require('../models')
