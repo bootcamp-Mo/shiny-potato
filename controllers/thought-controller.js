@@ -23,7 +23,7 @@ module.exports = {
 				res.status(200).json(thought);
 			}
 		} catch (error) {
-			res.status(500).json(error, { message: 'no thoughts we found with that ID' })
+			res.status(500).json(error, { message: 'No thoughts were found with that id' })
 		}
 	},
 
@@ -33,7 +33,7 @@ module.exports = {
 			const NewThought = await Thought.create(req.body)
 			res.status(200).json(NewThought)
 		} catch (error) {
-			res.status(500).json(error, { message: 'Could not create a a new thought' })
+			res.status(500).json(error, { message: 'Could not create a new thought' })
 		}
 	},
 
@@ -57,10 +57,27 @@ module.exports = {
 			await Thought.findOneAndDelete({ _id: req.params.thoughtId })
 			res.status(200).json('The thought has been deleted')
 		} catch (error) {
-			console.log("Error", error);
 			res.status(500).json(error, { message: 'Could not find a thought to delete' })
 		}
 	},
+
+	//add reaction to thought by id
+	async addReactionToThought(req, res) {
+		console.log('Reacting to a thought')
+		try {
+			const thought = await Thought.findOneAndUpdate(
+				{ _id: req.params.thoughtId },
+				{ $push: { reactions: [req.body] } },
+				{ runValidators: true, new: true }
+			)
+			if (!thought) {
+				return res.status(404).json({ message: 'No thought was found' })
+			}
+			res.status(200).json(thought)
+		} catch (error) {
+			res.status(500).json(error, { message: 'Could not react to that thought' })
+		}
+	}
 }
 
 /**==============================================

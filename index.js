@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const express = require('express')
-const db = require('../config/connection');
+const db = require('./config');
 const routes = require('./routes')
 
 const app = express()
