@@ -34,8 +34,8 @@ module.exports = {
 	//create a new thought
 	async createThought(req, res) {
 		try {
-			const NewThought = await Thought.create(req.body)
-			res.status(200).json(NewThought)
+			const newThought = await Thought.create(req.body)
+			res.status(200).json(newThought)
 		} catch (error) {
 			res.status(500).json(
 				error,
