@@ -7,7 +7,9 @@ module.exports = {
 			const thoughts = await Thought.find()
 			res.status(200).json(thoughts, { message: 'Found all thoughts' })
 		} catch (error) {
-			res.status(500).json(error, { message: 'Unable to find all thoughts' })
+			res.status(500).json(
+				error,
+				{ message: 'Unable to find all thoughts' })
 		}
 	},
 
@@ -23,7 +25,9 @@ module.exports = {
 				res.status(200).json(thought);
 			}
 		} catch (error) {
-			res.status(500).json(error, { message: 'No thoughts were found with that id' })
+			res.status(500).json(
+				error,
+				{ message: 'No thoughts were found with that id' })
 		}
 	},
 
@@ -33,7 +37,9 @@ module.exports = {
 			const NewThought = await Thought.create(req.body)
 			res.status(200).json(NewThought)
 		} catch (error) {
-			res.status(500).json(error, { message: 'Could not create a new thought' })
+			res.status(500).json(
+				error,
+				{ message: 'Could not create a new thought' })
 		}
 	},
 
@@ -46,8 +52,10 @@ module.exports = {
 			} else {
 				res.status(201).json(updatedThought)
 			}
-		} catch (err) {
-			res.status(403).json(err, { message: 'You are trying to edit someone elses post' })
+		} catch (error) {
+			res.status(403).json(
+				error,
+				{ message: 'You are trying to edit someone elses post' })
 		}
 	},
 
@@ -57,7 +65,9 @@ module.exports = {
 			await Thought.findOneAndDelete({ _id: req.params.thoughtId })
 			res.status(200).json('The thought has been deleted')
 		} catch (error) {
-			res.status(500).json(error, { message: 'Could not find a thought to delete' })
+			res.status(500).json(
+				error,
+				{ message: 'Could not find a thought to delete' })
 		}
 	},
 
@@ -75,7 +85,28 @@ module.exports = {
 			}
 			res.status(200).json(thought)
 		} catch (error) {
-			res.status(500).json(error, { message: 'Could not react to that thought' })
+			res.status(500).json(
+				error,
+				{ message: 'Could not react to that thought' })
+		}
+	},
+
+	//delete reaction 
+	async removeReactionFromThought(req, res) {
+		try {
+			const removedReaction = await Reaction.findByIdAndDelete(
+				{ _id: req.params.reactionId },
+				{ $pull: { reactions: { _id: req.params.reactionId } } },
+				{ runValidators: true, new: true }
+			)
+			if (!removedReaction) {
+				return res.status(404).json({ message: 'No reactions was moved' })
+			}
+			res.status(200).json('The reactions was removed from the thought')
+		} catch (error) {
+			res.status(500).json(
+				error,
+				{ message: 'Could not find a reactions that is associated with that thought.' })
 		}
 	}
 }
@@ -86,8 +117,12 @@ module.exports = {
  * ? Why .find() and not .findAll()?
  * 		.findAll() is used in Sequelize not Mongoose    
  * 
- *  
+ * ? $push 
+ * 		update operator that appends a specified value to an array, 
+ * 		used to add a new reaction to the reactions array of a specific thought. 
  * 	
- * 
+ * ? $pull 
+ * 		update operator that removes all instances of a value from an existing 
+ * 		array.
  *
  *=============================================**/
