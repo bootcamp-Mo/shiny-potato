@@ -72,7 +72,7 @@ module.exports = {
 	},
 
 	//add Friend to user by id
-	async addFriendToUser(req, res) {
+	async addFriend(req, res) {
 		console.log('Find a friend for the user')
 		try {
 			const user = await User.findOneAndUpdate(
@@ -92,7 +92,7 @@ module.exports = {
 	},
 
 	//delete Friend 
-	async removeFriendFromUser(req, res) {
+	async deleteFriend(req, res) {
 		try {
 			const removedFriend = await Friend.findByIdAndDelete(
 				{ _id: req.params.friendId },

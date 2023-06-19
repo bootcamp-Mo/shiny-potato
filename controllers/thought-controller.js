@@ -72,7 +72,7 @@ module.exports = {
 	},
 
 	//add reaction to thought by id
-	async addReactionToThought(req, res) {
+	async addReaction(req, res) {
 		console.log('Reacting to a thought')
 		try {
 			const thought = await Thought.findOneAndUpdate(
@@ -92,7 +92,7 @@ module.exports = {
 	},
 
 	//delete reaction 
-	async removeReactionFromThought(req, res) {
+	async removeReaction(req, res) {
 		try {
 			const removedReaction = await Reaction.findByIdAndDelete(
 				{ _id: req.params.reactionId },
