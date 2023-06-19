@@ -5,8 +5,8 @@ const {
 	createUser,
 	updateUser,
 	deleteUser,
-	deleteFriend,
-	addFriend
+	addFriend,
+	deleteFriend
 } = require('../../controllers/user-controller');
 
 // Set up GET all and POST at /api/users
@@ -22,20 +22,10 @@ router
 	.put(updateUser)
 	.delete(deleteUser);
 
-router
-	.route('/:friendId')
-	.param('userId', getUserById)
-	.param('friendId', getUserById)
-	.patch((req, res) => {
-		console.log("PATCH request received")
-	})
-	.delete(deleteFriend)
 
 router
 	.route('/:userId/friends/:friendId')
-	.param('userId', getUserById)
-	.param('friendId', getUserById)
-	.post(addFriend);
-
+	.post(addFriend)
+	.delete(deleteFriend);
 
 module.exports = router;
