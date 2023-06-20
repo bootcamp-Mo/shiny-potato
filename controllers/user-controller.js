@@ -1,33 +1,26 @@
-const { User } = require('../models')
+const { User, Thought } = require('../models')
 
 module.exports = {
 	// get all users
 	async getAllUsers(req, res) {
 		try {
-			const users = await User.find()
-			res.status(200).json(users, { message: 'Found all users' })
+			const users = await User.find().populate('thoughts')
+			res.status(200).json(users);
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'Unable to find all users' })
+			res.status(500).json({ error: 'Could not find any users' });
 		}
 	},
 
 	//get user by id
 	async getUserById(req, res) {
 		try {
-			const user = await User.findOne({ _id: req.params.userId })
+			const user = await User.findById(req.params.userId)
 			if (!user) {
-				return res.status(404).send('That user was not found')
+				return res.status(404).json({ error: 'That user was not found' })
 			}
-			else {
-				console.log("found")
-				res.status(200).json(user);
-			}
+			res.status(200).json(user);
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'No users were found with that id' })
+			res.status(500).json(error)
 		}
 	},
 
@@ -37,25 +30,26 @@ module.exports = {
 			const newUser = await User.create(req.body)
 			res.status(200).json(newUser)
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'Could not create a new user' })
+			res.status(500).json({ error })
 		}
 	},
 
 	//update user by id
 	async updateUser(req, res) {
 		try {
-			const updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body, { runValidators: true })
+			const updatedUser = await User.findByIdAndUpdate(
+				req.params.userId,
+				req.body,
+				{ runValidators: true, new: true }
+			)
+
 			if (!updatedUser) {
 				throw Error;
 			} else {
 				res.status(201).json(updatedUser)
 			}
 		} catch (error) {
-			res.status(403).json(
-				error,
-				{ message: 'You are trying to edit someone elses post' })
+			res.status(500).json({ error })
 		}
 	},
 
@@ -65,9 +59,7 @@ module.exports = {
 			await User.findOneAndDelete({ _id: req.params.userId })
 			res.status(200).json('The user has been deleted')
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'Could not find a user to delete' })
+			res.status(500).json({ error })
 		}
 	},
 
@@ -85,9 +77,7 @@ module.exports = {
 			}
 			res.status(200).json(user)
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'No friend was added to user' })
+			res.status(500).json({ error })
 		}
 	},
 
@@ -104,9 +94,9 @@ module.exports = {
 			}
 			res.status(200).json('The friend was removed from the user')
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'Could not find a friend that is associated with that user.' })
+			res.status(500).json({ error })
 		}
 	}
 }
+
+

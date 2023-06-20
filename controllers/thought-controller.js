@@ -1,4 +1,4 @@
-const { Thought, Reaction } = require('../models/')
+const { Thought, Reaction, User } = require('../models/')
 
 module.exports = {
 	// get all thoughts
@@ -7,27 +7,20 @@ module.exports = {
 			const thoughts = await Thought.find()
 			res.status(200).json(thoughts, { message: 'Found all thoughts' })
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'Unable to find all thoughts' })
+			res.status(500).json(error)
 		}
 	},
 
 	//get thought by id
 	async getThoughtById(req, res) {
 		try {
-			const thought = await Thought.findOne({ _id: req.params.thoughtId })
+			const thought = await Thought.findById(req.params.thoughtId)
 			if (!thought) {
-				return res.status(404).send('That thought was not found')
+				return res.status(404).json({ message: 'That thought was not found' })
 			}
-			else {
-				console.log("found")
-				res.status(200).json(thought);
-			}
+			res.status(200).json(thought);
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'No thoughts were found with that id' })
+			res.status(500).json(error)
 		}
 	},
 
@@ -35,11 +28,19 @@ module.exports = {
 	async createThought(req, res) {
 		try {
 			const newThought = await Thought.create(req.body)
+
+			const user = await User.findOneAndUpdate(
+				{ _id: req.body.userId },
+				{ $push: { thought: newThought._id } },
+				{ runValidators: true, new: true }
+			)
+			if (!user) {
+				res.status(404).json({ message: 'No user found with this id!' });
+				return;
+			}
 			res.status(200).json(newThought)
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'Could not create a new thought' })
+			res.status(500).json(error)
 		}
 	},
 
@@ -53,9 +54,7 @@ module.exports = {
 				res.status(201).json(updatedThought)
 			}
 		} catch (error) {
-			res.status(403).json(
-				error,
-				{ message: 'You are trying to edit someone elses post' })
+			res.status(403).json(error)
 		}
 	},
 
@@ -65,9 +64,7 @@ module.exports = {
 			await Thought.findOneAndDelete({ _id: req.params.thoughtId })
 			res.status(200).json('The thought has been deleted')
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'Could not find a thought to delete' })
+			res.status(500).json(error)
 		}
 	},
 
@@ -85,9 +82,7 @@ module.exports = {
 			}
 			res.status(200).json(thought)
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'Could not react to that thought' })
+			res.status(500).json(error)
 		}
 	},
 
@@ -104,9 +99,7 @@ module.exports = {
 			}
 			res.status(200).json('The reactions was removed from the thought')
 		} catch (error) {
-			res.status(500).json(
-				error,
-				{ message: 'Could not find a reactions that is associated with that thought.' })
+			res.status(500).json(error)
 		}
 	}
 }

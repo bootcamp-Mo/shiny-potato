@@ -14,7 +14,7 @@ const UserSchema = new Schema(
 			required: true,
 			match: [/.+\@.+\..+/, 'Please enter a valid e-mail address']
 		},
-		thought: [
+		thoughts: [
 			{
 				type: Types.ObjectId,
 				ref: 'Thought'
