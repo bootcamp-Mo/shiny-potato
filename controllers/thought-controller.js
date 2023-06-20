@@ -5,7 +5,7 @@ module.exports = {
 	async getAllThoughts(req, res) {
 		try {
 			const thoughts = await Thought.find()
-			res.status(200).json(thoughts, { message: 'Found all thoughts' })
+			res.status(200).json({ message: 'Found all thoughts' })
 		} catch (error) {
 			res.status(500).json(error)
 		}
@@ -50,9 +50,8 @@ module.exports = {
 			const updatedThought = await Thought.findByIdAndUpdate(req.params.thoughtId, req.body, { runValidators: true })
 			if (!updatedThought) {
 				throw Error;
-			} else {
-				res.status(201).json(updatedThought)
 			}
+			res.status(201).json(updatedThought)
 		} catch (error) {
 			res.status(403).json(error)
 		}
