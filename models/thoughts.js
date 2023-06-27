@@ -34,7 +34,7 @@ const ThoughtSchema = new Schema(
 
 // Virtual for thought's URL
 ThoughtSchema.virtual('reactionCount').get(function () {
-	return this.reactions.length;
+	return this.reactions.length
 })
 // this can not be an arrow function because arrow functions do not bind their 
 // own this context, which we need to refer to the document instance.
