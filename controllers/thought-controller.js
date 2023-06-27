@@ -47,11 +47,19 @@ module.exports = {
 	//update thought by id
 	async updateThought(req, res) {
 		try {
-			const updatedThought = await Thought.findByIdAndUpdate(req.params.thoughtId, req.body, { runValidators: true })
+			const updatedThought = await Thought.findByIdAndUpdate(
+				req.params.thoughtId,
+				req.body,
+				{
+					runValidators: true,
+					new: true
+				}
+			)
 			if (!updatedThought) {
 				throw Error;
+			} else {
+				res.status(201).json(updatedThought);
 			}
-			res.status(201).json(updatedThought)
 		} catch (error) {
 			res.status(403).json(error)
 		}
@@ -86,22 +94,37 @@ module.exports = {
 	},
 
 	//delete reaction 
-	async removeReaction(req, res) {
+	async deleteReaction(req, res) {
+		console.log('Want to delete a reaction?');
 		try {
-			const removedReaction = await Reaction.findByIdAndDelete(
-				{ _id: req.params.reactionId },
-				{ $pull: { reactions: { _id: req.params.reactionId } } },
+			console.log('check 1');
+			const deleteReaction = await Thought.findByIdAndUpdate(
+				{ _id: req.params.thoughtId },
+				{ $pull: { reactions: req.params.reactionId } },
 				{ runValidators: true, new: true }
 			)
-			if (!removedReaction) {
-				return res.status(404).json({ message: 'No reactions was moved' })
+			console.log('check 2');
+			if (!deleteReaction) {
+				return res.status(404).json({ message: 'No reaction was deleted' })
 			}
-			res.status(200).json('The reactions was removed from the thought')
+			res.status(200).json('The friend was removed from the user')
 		} catch (error) {
-			res.status(500).json(error)
+			res.status(500).json({ error })
+			console.log('check error');
 		}
 	}
+
 }
+// removeReaction({ params }, res) {
+//     Thought.findOneAndUpdate(
+//       { _id: params.thoughtId },
+//       { $pull: { reactions: { reactionId: params.reactionId } } },
+//       { new: true }
+//     )
+//       .then((dbThoughtData) => res.json(dbThoughtData))
+//       .catch((err) => res.json(err));
+//   }
+// }
 
 /**==============================================
  * ?                  Info

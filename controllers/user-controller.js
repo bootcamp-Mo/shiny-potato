@@ -40,7 +40,10 @@ module.exports = {
 			const updatedUser = await User.findByIdAndUpdate(
 				req.params.userId,
 				req.body,
-				{ runValidators: true, new: true }
+				{
+					runValidators: true,
+					new: true
+				}
 			)
 
 			if (!updatedUser) {
@@ -65,32 +68,35 @@ module.exports = {
 
 	//add Friend to user by id
 	async addFriend(req, res) {
-		console.log('Find a friend for the user')
+		console.log('Find a friend for the user');
 		try {
-			const user = await User.findOneAndUpdate(
-				{ _id: req.params.userId },
-				{ $push: { Friend: [req.body] } },
-				{ runValidators: true, new: true }
-			)
+			const user = await User.findById(req.params.userId);
 			if (!user) {
-				return res.status(404).json({ message: 'No user was found' })
+				return res.status(404).json({ message: 'No user was found' });
 			}
-			res.status(200).json(user)
+			if (user.friends.includes(req.params.friendId)) {
+				return res.status(400).json({ message: 'You are already friends' });
+			}
+
+			user.friends.push(req.params.friendId);
+			await user.save();
+
+			res.status(200).json(user);
 		} catch (error) {
-			res.status(500).json({ error })
+			res.status(500).json({ error });
 		}
 	},
 
 	//delete Friend 
 	async deleteFriend(req, res) {
 		try {
-			const removedFriend = await User.findByIdAndDelete(
+			const removedFriend = await User.findByIdAndUpdate(
 				{ _id: req.params.userId },
-				{ $pull: { friend: { _id: req.params.userId } } },
+				{ $pull: { friends: req.params.friendId } },
 				{ runValidators: true, new: true }
 			)
 			if (!removedFriend) {
-				return res.status(404).json({ message: 'No friend was moved' })
+				return res.status(404).json({ message: 'No friend was removed' })
 			}
 			res.status(200).json('The friend was removed from the user')
 		} catch (error) {
@@ -100,3 +106,23 @@ module.exports = {
 }
 
 
+//*================================ Saved ==============================*/
+
+//add Friend to user by id
+// async addFriend(req, res) {
+// 	console.log('Find a friend for the user')
+// 	try {
+// 		const user = await User.findOneAndUpdate(
+// 			{ _id: req.params.userId },
+// 			{ $push: { friends: req.params.friendId } },
+// 			{ runValidators: true, new: true }
+// 		)
+// 		if (!user) {
+// 			return res.status(404).json({ message: 'No user was found' })
+// 		}
+
+// 		res.status(200).json(user)
+// 	} catch (error) {
+// 		res.status(500).json({ error })
+// 	}
+// },
