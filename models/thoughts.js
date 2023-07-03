@@ -40,6 +40,6 @@ ThoughtSchema.virtual('reactionCount').get(function () {
 // own this context, which we need to refer to the document instance.
 
 
-const Thought = model('Though', ThoughtSchema)
+const Thought = model('Thought', ThoughtSchema)
 
 module.exports = Thought
