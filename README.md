@@ -43,9 +43,7 @@ npm start
 
 ## Usage
 
-# Start the server
-```
-
+use npm start to run app and thne test routes in insomina.
 
 ## License
 
@@ -67,11 +65,9 @@ Questions? Feel free to reach out through the following channels:
 - Email: mo.sherred@gmail.com 
 
 
-## Contributing
+[walkthrough](https://github.com/bootcamp-Mo/shiny-potato/assets/122568039/9dfc4e64-8d14-4207-b67c-3b77078ada68)
 
-Contributions are welcome! If you find any issues or have suggestions for improvement, please create a new issue or submit a pull request.
 
-## License
 
-This project is licensed under the [MIT License](LICENSE).
+
 
