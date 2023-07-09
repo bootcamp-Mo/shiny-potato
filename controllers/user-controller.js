@@ -6,7 +6,7 @@ module.exports = {
   async getAllUsers(req, res) {
     console.log('hey are you running to get all of the users?')
     try {
-      const users = await User.find().populate('Thought')
+      const users = await User.find().populate('thoughts')
       res.status(200).json(users)
     } catch (error) {
       res.status(500).json({ error: 'Could not find any users' })
@@ -16,7 +16,7 @@ module.exports = {
   // get user by id
   async getUserById(req, res) {
     try {
-      const user = await User.findById(req.params.userId).populate('Thought')
+      const user = await User.findById(req.params.userId).populate('thoughts')
       if (!user) {
         return res.status(404).json({ error: 'That user was not found' })
       }
@@ -89,7 +89,7 @@ module.exports = {
     }
   },
 
-  // delete Friend 
+  // delete Friend
   async deleteFriend(req, res) {
     try {
       const removedFriend = await User.findByIdAndUpdate(
@@ -106,24 +106,3 @@ module.exports = {
     }
   }
 }
-
-// *================================ Saved ==============================*/
-//
-// add Friend to user by id
-// async addFriend(req, res) {
-// 	console.log('Find a friend for the user')
-// 	try {
-// 		const user = await User.findOneAndUpdate(
-// 			{ _id: req.params.userId },
-// 			{ $push: { friends: req.params.friendId } },
-// 			{ runValidators: true, new: true }
-// 		)
-// 		if (!user) {
-// 			return res.status(404).json({ message: 'No user was found' })
-// 		}
-
-// 		res.status(200).json(user)
-// 	} catch (error) {
-// 		res.status(500).json({ error })
-// 	}
-// }
