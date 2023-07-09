@@ -14,6 +14,7 @@ This is an API for a social network web application where users can share their 
 5. [Contributing](#contributing)
 6. [Tests](#tests)
 7. [Questions](#questions)
+8. [Walkthough](#walkthrough)
 
 ## Installation
 
@@ -65,7 +66,16 @@ Questions? Feel free to reach out through the following channels:
 - Email: mo.sherred@gmail.com 
 
 
+## Walkthrough 
+npm install, run app, test user routes
+[walkthrough](https://github.com/bootcamp-Mo/shiny-potato/assets/122568039/dc1bc108-ea30-492d-b176-c32830427892)
+
+all routes
 [walkthrough](https://github.com/bootcamp-Mo/shiny-potato/assets/122568039/9dfc4e64-8d14-4207-b67c-3b77078ada68)
+
+
+
+
 
 
 
